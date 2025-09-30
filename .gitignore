@@ -212,3 +212,5 @@ __marimo__/
 coswara/Extracted_data/
 icbhi/events/
 icbhi/ICBHI_final_database/
+*.tar.gz.*
+*.zip
