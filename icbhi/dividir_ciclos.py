@@ -5,7 +5,7 @@ import pandas as pd
 # Paths
 DATASET_DIR = "./icbhi/ICBHI_final_database"
 ANNOTATIONS_DIR = os.path.join(DATASET_DIR, "notaciones")
-OUTPUT_DIR = "./icbhi/ICBHI_ciclos"
+OUTPUT_DIR = "./dataset/ciclos"
 CSV_PATH = "./icbhi/ICBHI_ciclos/ICBHI_ciclos_metadata.csv"
 
 os.makedirs(OUTPUT_DIR, exist_ok=True)
