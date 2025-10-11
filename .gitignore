@@ -216,3 +216,6 @@ audios_propios/
 *.tar.gz.*
 *.zip
 *.ogg
+
+#vscode settings
+.vscode/
