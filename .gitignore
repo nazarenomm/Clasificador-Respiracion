@@ -216,6 +216,8 @@ audios_propios/
 *.tar.gz.*
 *.zip
 *.ogg
+dataset/ciclos/filtrado/test_melspectrogram.csv
+dataset/ciclos/filtrado/train_melspectrogram.csv
 
 #vscode settings
 .vscode/
