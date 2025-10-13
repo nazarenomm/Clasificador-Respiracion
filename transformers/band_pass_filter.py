@@ -5,12 +5,12 @@ from scipy.signal import butter, filtfilt
 
 from config import SAMPLING_RATE, HIGH_CUT, LOW_CUT
 
-class AudioFilterResampler(BaseEstimator, TransformerMixin):
-    def __init__(self, sr_target=SAMPLING_RATE, highcut=HIGH_CUT, lowcut=LOW_CUT, order=6):
-        self.sr_target = sr_target
-        self.highcut = highcut
+class BandPassFilter(BaseEstimator, TransformerMixin):
+    def __init__(self, lowcut=LOW_CUT, highcut=HIGH_CUT, order=6, sr=SAMPLING_RATE):
         self.lowcut = lowcut
+        self.highcut = highcut
         self.order = order
+        self.sr = sr
 
     def _filter(self, y, sr):
         nyq = 0.5 * sr
@@ -23,19 +23,9 @@ class AudioFilterResampler(BaseEstimator, TransformerMixin):
             b, a = butter(self.order, [normal_low, normal_high], btype='band')
         return filtfilt(b, a, y)
 
-    def _filter_and_resample(self, path):
-        y, sr = librosa.load(path, sr=None)
-        y = self._filter(y, sr)
-        if sr != self.sr_target:
-            y = librosa.resample(y, orig_sr=sr, target_sr=self.sr_target)
-        return y, self.sr_target
-
     def fit(self, X, y=None):
         return self
 
     def transform(self, X):
-        processed = []
-        for path in X:
-            y, sr = self._filter_and_resample(path)
-            processed.append(y)
-        return processed
+        filtered = [self._filter(y, self.sr) for y in X]
+        return filtered
