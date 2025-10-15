@@ -3,6 +3,8 @@ import librosa
 
 from config import SAMPLING_RATE
 
+# solo para armar datasets, e implementar en el segmentador
+
 class Resampler(BaseEstimator, TransformerMixin):
     def __init__(self, sr_target=SAMPLING_RATE):
         self.sr_target = sr_target

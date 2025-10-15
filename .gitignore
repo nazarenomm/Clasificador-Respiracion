@@ -216,10 +216,7 @@ audios_propios/
 *.tar.gz.*
 *.zip
 *.ogg
-dataset/ciclos_test/test_features.csv
-dataset/ciclos_test/test_melspectrogram.npz
-dataset/ciclos_train/train_features.csv
-dataset/ciclos_train/train_melspectrogram.npz
+*.npz
 
 #vscode settings
 .vscode/

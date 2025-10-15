@@ -6,7 +6,8 @@ Configuraciones globales para el proyecto.
 SAMPLING_RATE = 16_000
 FRAME_LENGTH = 1_024
 HOP_LENGTH = 512 # puede ser 256 o 128 para mayor resolucion temporal y precision en la deteccion de crepitaciones. Aumenta el tamaño del espectrograma y el tiempo de computo.
-MAX_DURATION = 6  # segundos
+MAX_DURATION = 6  # segundos, duración máxima de un ciclo respiratorio (inspiración + espiración)
+MIN_DURATION = 1  # segundos, duración mínima de un ciclo respiratorio (inspiración + espiración)
 
 # Filtros pasa banda
 HIGH_CUT = 4_000

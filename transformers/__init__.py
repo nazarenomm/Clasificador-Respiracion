@@ -12,7 +12,7 @@ from .spectrogram_padder import SpectrogramPadder
 from .flatten_transformer import FlattenTransformer
 from .mel_spectrogram_transformer import MelSpectrogramTransformer
 from .wavelet_denoiser import WaveletDenoiser
-
+from .noise_adder import NoiseAdder
 
 __all__ = [
     "Resampler",
@@ -22,5 +22,6 @@ __all__ = [
     "SpectrogramPadder",
     "FlattenTransformer",
     "MelSpectrogramTransformer",
-    "WaveletDenoiser"
+    "WaveletDenoiser",
+    "NoiseAdder"
 ]
