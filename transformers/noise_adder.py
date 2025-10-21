@@ -1,52 +1,85 @@
 import numpy as np
 import random
+import soundfile as sf
 from sklearn.base import BaseEstimator, TransformerMixin
 
+from config import SAMPLING_RATE, SEED
+
 class NoiseAdder(BaseEstimator, TransformerMixin):
-    def __init__(self, snr_min=5, snr_max=10, random_state=None):
+    def __init__(self, noise_files, snr_min=5, snr_max=10, mode='pool', random_state=SEED):
         """
-        Agrega ruido blanco a la señal manteniendo una SNR (Signal-to-Noise Ratio) aleatoria
-        entre snr_min y snr_max dB.
+        Agrega ruido real o blanco a las señales según el modo seleccionado.
 
         Parámetros:
         -----------
-        snr_min : float
-            SNR mínima en dB (más bajo = más ruido).
-        snr_max : float
-            SNR máxima en dB (más alto = menos ruido).
-        random_state : int o None
+        noise_files : list[str]
+            Lista de rutas a archivos .wav con grabaciones de ruido (mono, ya resampleados).
+        snr_min, snr_max : float
+            Rango de SNR (en dB) para el escalado del ruido.
+        mode : {'pool', 'white'}
+            'pool' → usa segmentos aleatorios de los audios de ruido.
+            'white' → genera ruido blanco.
+        random_state : int
             Semilla para reproducibilidad.
         """
+        self.noise_files = noise_files
         self.snr_min = snr_min
         self.snr_max = snr_max
+        self.mode = mode
         self.random_state = random_state
-        if random_state is not None:
-            np.random.seed(random_state)
-            random.seed(random_state)
+        
+        random.seed(random_state)
+
+        # Pre-carga los ruidos
+        self.noises = []
+        if self.mode == 'pool':
+            for path in noise_files:
+                noise, sr = sf.read(path)
+                if sr != SAMPLING_RATE:
+                    raise ValueError(f"Sample rate inesperado en {path}: {sr} (se esperaba {SAMPLING_RATE})")
+                if noise.ndim > 1:
+                    noise = np.mean(noise, axis=1)
+                self.noises.append(noise.astype(np.float32))
 
     def fit(self, X, y=None):
         return self
 
+    def _get_noise_segment(self, length):
+        """Obtiene un segmento de ruido del largo deseado."""
+        if self.mode == 'white' or not self.noises:
+            return np.random.normal(0, 1, length).astype(np.float32)
+
+        # Elige un ruido al azar del pool
+        noise = random.choice(self.noises)
+        if len(noise) < length:
+            # si es más corto, lo repite
+            reps = int(np.ceil(length / len(noise)))
+            noise = np.tile(noise, reps)
+
+        start = random.randint(0, len(noise) - length)
+        seg = noise[start:start + length]
+        return seg.astype(np.float32)
+
     def transform(self, X, y=None):
-        """
-        Aplica ruido blanco a cada señal de X.
-
-        Parámetros:
-        -----------
-        X : list[np.ndarray] o np.ndarray
-            Lista o array de señales (1D).
-
-        Retorna:
-        --------
-        list[np.ndarray]
-            Señales con ruido agregado.
-        """
+        """Aplica el ruido a cada señal en X."""
         noisy_signals = []
-        for y in X:
+        for signal in X:
+            length = len(signal)
             snr_db = random.uniform(self.snr_min, self.snr_max)
-            rms = np.sqrt(np.mean(y**2))
+
+            # RMS de la señal y ruido target según SNR
+            rms_signal = np.sqrt(np.mean(signal ** 2)) + 1e-12
             snr = 10 ** (snr_db / 20.0)
-            noise_rms = rms / snr
-            noise = np.random.normal(0, noise_rms, y.shape)
-            noisy_signals.append(y + noise)
+            noise_rms_target = rms_signal / snr
+
+            # Obtiene el ruido (segmento o blanco)
+            noise = self._get_noise_segment(length)
+            # Normaliza ruido y escala a RMS deseado
+            noise = noise / (np.sqrt(np.mean(noise ** 2)) + 1e-12) * noise_rms_target
+
+            # Opción: pequeño desplazamiento aleatorio del ruido
+            shift = random.randint(0, int(0.1 * length))
+            noise = np.roll(noise, shift)
+
+            noisy_signals.append(signal + noise)
         return noisy_signals

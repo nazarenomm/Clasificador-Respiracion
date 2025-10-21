@@ -220,3 +220,6 @@ audios_propios/
 
 #vscode settings
 .vscode/
+
+# temp files
+temp.*

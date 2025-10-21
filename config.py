@@ -17,6 +17,7 @@ LOW_CUT = 100 # supuestamente las frecuencias de interes estan entre 250-350 y 2
 N_MELS = 128
 N_FFT = 1_024
 MAX_LENGTH = 1 + int((MAX_DURATION * SAMPLING_RATE - N_FFT) // HOP_LENGTH)
+PADDING_MODE = 'center'  # 'end', 'start' o 'center'
 
 # Entrenamiento
 SEED = 42
