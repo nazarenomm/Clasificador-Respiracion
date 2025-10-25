@@ -4,7 +4,7 @@ import numpy as np
 from config import MAX_LENGTH, PADDING_MODE
 
 class SpectrogramPadder(BaseEstimator, TransformerMixin):
-    def __init__(self, max_length=MAX_LENGTH, mode=PADDING_MODE):
+    def __init__(self, max_length=MAX_LENGTH, mode=PADDING_MODE, pad_value=None):
         """
         Parameters
         ----------
@@ -14,6 +14,7 @@ class SpectrogramPadder(BaseEstimator, TransformerMixin):
             Estrategia de padding: 'end', 'start' o 'center'.
         """
         self.max_length = max_length
+        self.pad_value = pad_value
         self.mode = mode.lower()
         if self.mode not in ['end', 'start', 'center']:
             raise ValueError("mode must be 'end', 'start', or 'center'")
@@ -39,8 +40,9 @@ class SpectrogramPadder(BaseEstimator, TransformerMixin):
                     pad_left = pad_width // 2
                     pad_right = pad_width - pad_left
                     pad = ((0, 0), (pad_left, pad_right))
-
-                mel_padded = np.pad(mel, pad, mode='constant')
+                    
+                const_val = self.pad_value if self.pad_value is not None else mel.min()
+                mel_padded = np.pad(mel, pad, mode='constant', constant_values=const_val)
             else:
                 # Recortar si excede max_length
                 if self.mode == 'end':

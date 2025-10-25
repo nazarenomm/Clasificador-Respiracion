@@ -217,9 +217,10 @@ audios_propios/
 *.zip
 *.ogg
 *.npz
+*.png
 
 #vscode settings
 .vscode/
 
 # temp files
-temp.*
+temp*
