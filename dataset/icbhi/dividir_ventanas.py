@@ -4,12 +4,12 @@ import numpy as np
 import soundfile as sf
 
 # Parámetros
-input_audio_dir = "./icbhi/ICBHI_final_database"
-input_events_dir = "./icbhi/events"
+input_audio_dir = "./dataset/icbhi/ICBHI_final_database"
+input_events_dir = "./dataset/icbhi/events"
 output_dir = "./dataset/audios_ventanas"
 os.makedirs(output_dir, exist_ok=True)
 
-window_size = 2.0  # segundos
+window_size = 4.0  # segundos
 
 data_rows = []
 
