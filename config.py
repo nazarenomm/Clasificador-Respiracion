@@ -5,7 +5,7 @@ Configuraciones globales para el proyecto.
 # Audio
 SAMPLING_RATE = 16_000
 FRAME_LENGTH = 1_024
-HOP_LENGTH = 256 # puede ser 256 o 128 para mayor resolucion temporal y precision en la deteccion de crepitaciones.
+HOP_LENGTH = 256 # puede ser menos para mayor resolucion temporal y precision en la deteccion de crepitaciones.
 MAX_DURATION = 6  # segundos, duración máxima de un ciclo respiratorio (inspiración + espiración)
 MIN_DURATION = 1  # segundos, duración mínima de un ciclo respiratorio (inspiración + espiración)
 
