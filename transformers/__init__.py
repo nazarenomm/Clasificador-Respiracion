@@ -13,7 +13,6 @@ from .flatten_transformer import FlattenTransformer
 from .mel_spectrogram_transformer import MelSpectrogramTransformer
 from .wavelet_denoiser import WaveletDenoiser
 from .noise_adder import NoiseAdder
-from .normalizer import Normalizer
 
 __all__ = [
     "Resampler",
@@ -24,6 +23,5 @@ __all__ = [
     "FlattenTransformer",
     "MelSpectrogramTransformer",
     "WaveletDenoiser",
-    "NoiseAdder",
-    "Normalizer",
+    "NoiseAdder"
 ]
