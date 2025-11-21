@@ -6,6 +6,14 @@ from config import N_FFT, HOP_LENGTH, FRAME_LENGTH as WIN_LENGTH
 
 class SpectralSubtractor(BaseEstimator, TransformerMixin):
     def __init__(self, n_fft=N_FFT, hop_length=HOP_LENGTH, win_length=WIN_LENGTH, alpha=1.5):
+        '''Transformador para aplicar sustracción espectral en señales de audio.
+
+        Parámetros:
+        - n_fft: Tamaño de la ventana FFT.
+        - hop_length: Paso entre ventanas consecutivas.
+        - win_length: Longitud de la ventana.
+        - alpha: Factor de sobre-sustracción.
+        '''
         self.n_fft = n_fft
         self.hop_length = hop_length
         self.win_length = win_length

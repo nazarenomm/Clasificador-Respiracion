@@ -3,17 +3,18 @@ import pandas as pd
 import numpy as np
 import soundfile as sf
 
-# Parámetros
+from config import WINDOW_SIZE
+
 input_audio_dir = "./dataset/icbhi/ICBHI_final_database"
 input_events_dir = "./dataset/icbhi/events"
-output_dir = "./dataset/audios_ventanas"
+output_dir = "./data_preprocesada/ventanas"
 os.makedirs(output_dir, exist_ok=True)
 
-window_size = 4.0  # segundos
+window_size = WINDOW_SIZE
 
 data_rows = []
 
-# Función auxiliar para leer eventos
+# Función para leer eventos
 def load_events(txt_path):
     events = []
     if not os.path.exists(txt_path):
@@ -44,7 +45,7 @@ for root, _, files in os.walk(input_audio_dir):
         duration = len(audio) / sr
         events = load_events(events_path)
 
-        # Crear ventanas
+        # Creamos las ventanas
         n_windows = int(np.ceil(duration / window_size))
 
         for i in range(n_windows):
@@ -55,7 +56,7 @@ for root, _, files in os.walk(input_audio_dir):
             end_sample = int(end_time * sr)
             segment = audio[start_sample:end_sample]
 
-            # Determinar etiqueta
+            # Determinamos la etiqueta (normal, crackles, wheezes, both. Para posible clasificacion multiclase)
             window_labels = set()
             for ev_start, ev_end, ev_label in events:
                 overlap = not (ev_end <= start_time or ev_start >= end_time)
@@ -69,17 +70,13 @@ for root, _, files in os.walk(input_audio_dir):
             else:
                 label = "both"
 
-            # Guardar fragmento
+            # Guardamos la ventana
             new_name = f"{os.path.splitext(file)[0]}_win{i:03d}.wav"
             new_path = os.path.join(output_dir, new_name)
             sf.write(new_path, segment, sr)
 
             data_rows.append({"filename": new_name, "label": label})
 
-# Guardar CSV
+# Guardamos el CSV con las eqtiquetas
 df = pd.DataFrame(data_rows)
 df.to_csv(os.path.join(output_dir, "labels.csv"), index=False)
-
-print("✅ Dataset generado correctamente.")
-print(f"Total de ventanas: {len(df)}")
-print(f"CSV guardado en: {os.path.join(output_dir, 'labels.csv')}")

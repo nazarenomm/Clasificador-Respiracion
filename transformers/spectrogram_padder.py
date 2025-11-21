@@ -5,14 +5,12 @@ from config import MAX_LENGTH, PADDING_MODE
 
 class SpectrogramPadder(BaseEstimator, TransformerMixin):
     def __init__(self, max_length=MAX_LENGTH, mode=PADDING_MODE, pad_value=None):
-        """
-        Parameters
-        ----------
-        max_length : int
-            Longitud máxima del eje temporal del espectrograma.
-        mode : str
-            Estrategia de padding: 'end', 'start' o 'center'.
-        """
+        '''Transformador para aplicar padding o recorte a espectrogramas de Mel.
+        Parámetros:
+        - max_length: Longitud máxima deseada (número de frames).
+        - mode: Modo de padding/recorte ('end', 'start', 'center').
+        - pad_value: Valor de padding. Si es None, se usa el valor mínimo del espectrograma.
+        '''
         self.max_length = max_length
         self.pad_value = pad_value
         self.mode = mode.lower()
@@ -44,7 +42,7 @@ class SpectrogramPadder(BaseEstimator, TransformerMixin):
                 const_val = self.pad_value if self.pad_value is not None else mel.min()
                 mel_padded = np.pad(mel, pad, mode='constant', constant_values=const_val)
             else:
-                # Recortar si excede max_length
+                # Recortar si excede max_length (idealmente evitar que esto pase)
                 if self.mode == 'end':
                     mel_padded = mel[:, :self.max_length]
                 elif self.mode == 'start':

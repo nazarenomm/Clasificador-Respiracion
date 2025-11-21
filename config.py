@@ -13,6 +13,9 @@ N_FFT = 1_024
 MAX_LENGTH = 1 + int((MAX_DURATION * SAMPLING_RATE - N_FFT) // HOP_LENGTH)
 PADDING_MODE = 'center'  # 'end', 'start' o 'center'
 N_MFCC = 40
+WINDOW_SIZE = 4.0  # segundos para preprocesado por ventanas
+WINDOW_HOP_LENGTH = 128
+WINDOW_LENGTH = 1 + int((WINDOW_SIZE * SAMPLING_RATE - N_FFT) // WINDOW_HOP_LENGTH)
 
 # Filtros pasa banda
 HIGH_CUT = 4_000

@@ -7,6 +7,14 @@ from config import SAMPLING_RATE, HIGH_CUT, LOW_CUT
 
 class BandPassFilter(BaseEstimator, TransformerMixin):
     def __init__(self, lowcut=LOW_CUT, highcut=HIGH_CUT, order=6, sr=SAMPLING_RATE):
+        '''Filtro pasa banda para señales de audio.
+
+        Parámetros:
+        - lowcut: Frecuencia de corte inferior en Hz.
+        - highcut: Frecuencia de corte superior en Hz.
+        - order: Orden del filtro Butterworth.
+        - sr: Tasa de muestreo de la señal.
+        '''
         self.lowcut = lowcut
         self.highcut = highcut
         self.order = order

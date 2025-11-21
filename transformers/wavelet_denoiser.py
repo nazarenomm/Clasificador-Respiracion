@@ -4,6 +4,14 @@ from sklearn.base import BaseEstimator, TransformerMixin
 
 class WaveletDenoiser(BaseEstimator, TransformerMixin):
     def __init__(self, wavelet='db4', level=4, threshold_method='soft'):
+        '''
+        Transformador para aplicar denoising basado en wavelets en señales de audio.
+        
+        Parámetros:
+        - wavelet: Tipo de wavelet a utilizar.
+        - level: Nivel de descomposición.
+        - threshold_method: Método de umbralización ('soft' o 'hard').
+        '''
         self.wavelet = wavelet
         self.level = level
         self.threshold_method = threshold_method

@@ -11,16 +11,12 @@ class NoiseAdder(BaseEstimator, TransformerMixin):
         Agrega ruido real o blanco a las señales según el modo seleccionado.
 
         Parámetros:
-        -----------
-        noise_files : list[str]
-            Lista de rutas a archivos .wav con grabaciones de ruido (mono, ya resampleados).
-        snr_min, snr_max : float
-            Rango de SNR (en dB) para el escalado del ruido.
+        noise_files : Lista de rutas a archivos .wav con grabaciones de ruido (mono, ya resampleados).
+        snr_min, snr_max : Rango de SNR (en dB) para el escalado del ruido.
         mode : {'pool', 'white'}
-            'pool' → usa segmentos aleatorios de los audios de ruido.
-            'white' → genera ruido blanco.
-        random_state : int
-            Semilla para reproducibilidad.
+            'pool' usa segmentos aleatorios de los audios de ruido.
+            'white' genera ruido blanco.
+        random_state : Semilla para reproducibilidad.
         """
         self.noise_files = noise_files
         self.snr_min = snr_min
@@ -77,7 +73,7 @@ class NoiseAdder(BaseEstimator, TransformerMixin):
             # Normaliza ruido y escala a RMS deseado
             noise = noise / (np.sqrt(np.mean(noise ** 2)) + 1e-12) * noise_rms_target
 
-            # Opción: pequeño desplazamiento aleatorio del ruido
+            # Pequeño desplazamiento aleatorio del ruido
             shift = random.randint(0, int(0.1 * length))
             noise = np.roll(noise, shift)
 

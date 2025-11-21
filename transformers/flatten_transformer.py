@@ -3,6 +3,8 @@ from sklearn.base import BaseEstimator, TransformerMixin
 
 class FlattenTransformer(BaseEstimator, TransformerMixin):
     def fit(self, X, y=None):
+        '''Transformador para aplanar matrices multidimensionales.
+        '''
         return self
 
     def transform(self, X):

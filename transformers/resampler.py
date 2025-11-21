@@ -7,6 +7,11 @@ from config import SAMPLING_RATE
 
 class Resampler(BaseEstimator, TransformerMixin):
     def __init__(self, sr_target=SAMPLING_RATE):
+        '''Transformador para re-muestrear señales de audio a una tasa de muestreo objetivo.
+    
+        Parámetros:
+        - sr_target: Tasa de muestreo deseada.
+        '''
         self.sr_target = sr_target
 
     def fit(self, X, y=None):

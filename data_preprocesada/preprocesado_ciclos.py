@@ -3,15 +3,15 @@ import soundfile as sf
 import pandas as pd
 
 # Paths
-DATASET_DIR = "./icbhi/ICBHI_final_database"
+DATASET_DIR = "./dataset/icbhi/ICBHI_final_database"
 ANNOTATIONS_DIR = os.path.join(DATASET_DIR, "notaciones")
-OUTPUT_DIR = "./dataset/ciclos"
-CSV_PATH = "./dataset/ciclos/ICBHI_ciclos_metadata.csv"
+OUTPUT_DIR = "./data_preprocesada/ciclos"
+CSV_PATH = "./data_preprocesada/ciclos/metadata.csv"
 
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 
-# Cargar demographics
+# Cargar datos demográficos
 demographic_path = os.path.join(ANNOTATIONS_DIR, "demographic.txt")
 demographic_df = pd.read_csv(
     demographic_path,
@@ -29,11 +29,11 @@ diagnosis_df = pd.read_csv(
     names=["patient", "diagnosis"]
 )
 
-# Merge en un dict rápido para lookup
+# Merge
 demographics_dict = demographic_df.set_index("patient").to_dict(orient="index")
 diagnosis_dict = diagnosis_df.set_index("patient")["diagnosis"].to_dict()
 
-# Procesar audios
+# audios
 rows = []
 
 for file in os.listdir(DATASET_DIR):
@@ -44,10 +44,10 @@ for file in os.listdir(DATASET_DIR):
         if not os.path.exists(txt_path):
             continue
 
-        # Cargar audio
+        # Cargamos el audio
         audio, sr = sf.read(wav_path)
 
-        # Parsear nombre del archivo
+        # Parseamos el nombre del archivo
         base_name = os.path.splitext(file)[0]
         patient, rec_idx, location, mode, instrument = base_name.split("_")
         patient_id = int(patient)
@@ -56,31 +56,31 @@ for file in os.listdir(DATASET_DIR):
         demo = demographics_dict.get(patient_id, {})
         diag = diagnosis_dict.get(patient_id, "NA")
 
-        # Leer anotaciones
+        # Leemos las anotaciones
         with open(txt_path, "r") as f:
             lines = f.readlines()
 
-        # Procesar cada ciclo
+        # Procesamos cada ciclo
         for i, line in enumerate(lines):
             start, end, crackles, wheezes = line.strip().split("\t")
             start, end = float(start), float(end)
             crackles, wheezes = int(crackles), int(wheezes)
 
-            # Convertir a muestras
+            # Convertimos a muestras
             start_sample = int(start * sr)
             end_sample = int(end * sr)
 
-            # Extraer ciclo
+            # Extraemos el ciclo
             cycle_audio = audio[start_sample:end_sample]
 
             # Nombre archivo ciclo
             cycle_id = f"{base_name}_cycle{i+1}"
             out_wav = os.path.join(OUTPUT_DIR, f"{cycle_id}.wav")
 
-            # Guardar fragmento
+            # Guardamos el ciclo
             sf.write(out_wav, cycle_audio, sr)
 
-            # Agregar metadata
+            # Agregamos metadata
             rows.append({
                 "patient": patient_id,
                 "recording_index": rec_idx,
@@ -104,6 +104,6 @@ for file in os.listdir(DATASET_DIR):
                 "diagnosis": diag
             })
 
-# Guardar CSV final
+# Guardamos el CSV con la metadata
 df = pd.DataFrame(rows)
 df.to_csv(CSV_PATH, index=False)
