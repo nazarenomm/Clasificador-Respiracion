@@ -206,17 +206,18 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 
-
 # Audios
-*.wav
-coswara/Extracted_data/
-icbhi/events/
-icbhi/ICBHI_final_database/
-*.tar.gz.*
-*.zip
-*.ogg
-*.npz
-*.png
+data_preprocesada/ciclos/
+data_preprocesada/ventanas/
+
+dataset/ruido_largo/
+dataset/ruido/
+dataset/icbhi/
+dataset/audios_propios/
+
+data_procesada/ciclos/
+data_procesada/ciclos_propios_eb/
+data_procesada/ventanas/
 
 #vscode settings
 .vscode/
