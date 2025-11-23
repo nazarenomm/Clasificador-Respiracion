@@ -22,15 +22,7 @@ dataset/
     └── events/             # Carpeta con eventos
 ```
 
-**IMPORTANTE:**
-Todos los contenidos del dataset deben estar dentro de `dataset/icbhi`.
-
 ---
-## 📦 Descarga y Organización del Dataset de ruido
-
-### 1. Descargar el dataset
-
-### 2. Organización del dataset
 
 ## ⚙️ Scripts y notebooks a ejecutar
 
@@ -75,7 +67,6 @@ Si se trabaja desde VS-Code, asegurarse de agregar al archivo `.vscode/settings.
 ```json
 {
     "jupyter.notebookFileRoot": "${workspaceFolder}",
-    ...
 }
 ```
 
