@@ -1,6 +1,6 @@
 # Detección de Broncoespasmos para una plataforma mHealth
 
-## 📦 Descarga y Organización del Dataset ICBHI
+## Descarga y Organización del Dataset ICBHI
 
 Para reproducir el pipeline es necesario descargar el dataset **ICBHI Respiratory Sound Database**.
 
@@ -18,34 +18,46 @@ Una vez descargado, colocarlo dentro de la carpeta `dataset/`, respetando la sig
 dataset/
 └── icbhi/
     ├── ICBHI_Final_Database/
-    ├── notaciones/         # Carpeta con anotaciones (nombre exacto)
-    └── events/             # Carpeta con eventos
+    │    └── notaciones/                  # Carpeta con anotaciones
+    │        ├── demographic.txt
+    │        ├── diagnosis.txt
+    │        ├── filename_differences.txt
+    │        └── filename_format.txt
+    └── events/                           # Carpeta con eventos
 ```
 
 ---
 
-## ⚙️ Scripts y notebooks a ejecutar
+## Descomprimir datasets
 
-El pipeline de procesamiento se divide en varias etapas. A continuación se detalla qué archivo se encarga de cada parte:
+Es necesario descomprimir el dataset de ruido extraído del **Microsoft Scalable Noisy Speech Dataset** ([https://www.kaggle.com/datasets/abdelrhamanfakhry/noise-data-set](https://www.kaggle.com/datasets/abdelrhamanfakhry/noise-data-set)). Se hallan en la carpeta dataset, descomprimirlos en esa misma ruta.
 
-### 1. Segmentación de ruido
+---
 
-**Script:** `dataset/ruido_largo/segmentar_ruido.py`  
-Se utiliza para segmentar muestras largas de ruido en fragmentos pequeños utilizados para augmentations.
+## Scripts a ejecutar (Preprocesado)
 
-### 2. Segmentación en ciclos
+El preprocesamiento de los audios originales está dividido en distintos _scripts_. A continuación se detalla qué archivo se encarga de cada parte:
+
+### 1. Segmentación en ciclos
 
 **Script:** `data_preprocesada/preprocesado_ciclos.py`  
 Genera los ciclos respiratorios a partir de los audios originales.
 
-### 3. Segmentación en ventanas
+### 2. Segmentación en ventanas
 
 **Script:** `data_preprocesada/preprocesado_ventanas.py`
-Divide los audios en ventanas temporales de 4 segundos a partir de los audios originales.
+Divide los audios en ventanas temporales a partir de los audios originales.
 
-### 4. Procesamiento final
+### 3. Segmentación de ruido
 
-**Notebook:** `data_procesada/procesado_ciclos.ipynb` o `data_procesada/procesado_ventanas.ipynb`
+**Script:** `dataset/ruido_largo/segmentar_ruido.py`  
+Se utiliza para segmentar muestras largas de ruido en fragmentos pequeños utilizados para _augmentations_.
+
+---
+
+## Notebooks
+
+**Procesado:** `data_procesada/procesado_ciclos.ipynb` o `data_procesada/procesado_ventanas.ipynb`
 Esta notebook genera los mel-espectrogramas y matrices finales que se utilizarán para el entrenamiento de modelos.
 
 En la notebook, cambiar la variable `dataset` según corresponda. Los valores utilizados hasta ahora incluyen:
@@ -57,9 +69,20 @@ En la notebook, cambiar la variable `dataset` según corresponda. Los valores ut
 
 Una vez ejecutado el notebook se creará una carpeta `data_procesada/ciclos/dataset` o `data_procesada/ventanas/dataset` con los conjuntos necesarios para entrenar los modelos.
 
+**Entrenamiento:** `modelos_clasicos/entrenamiento_rf.ipynb` o `neural_network/entrenamiento_mobile_net.ipynb`
+
+En la notebook, cambiar la variable `dataset` según corresponda. Los valores utilizados hasta ahora incluyen:
+
++ `'ciclos/crudos'`
++ `'ciclos/aug'`
++ `'ventanas/crudos'`
++ `'ventanas/aug'`
++ `'ventanas/crudos_cuadrados'` (sólo ventanas temporales)
++ `'ventanas/aug_cuadrados'` (sólo ventanas temporales)
+
 ---
 
-## 📁 Ejecución de notebooks desde el path base
+## Ejecución de notebooks desde el path base
 
 Las notebooks están diseñadas para ejecutarse desde el **directorio base del proyecto**.
 
@@ -74,22 +97,14 @@ Esto permite que los paths relativos se resuelvan correctamente.
 
 ---
 
-## 🔗 Links a fuentes y datasets
-
-* ICBHI Respiratory Sound Database: [https://bhichallenge.med.auth.gr/ICBHI_2017_Challenge](https://bhichallenge.med.auth.gr/ICBHI_2017_Challenge)
-* Papers relevantes: *(agregar links)*
-* Implementaciones y recursos relacionados: *(agregar links)*
-
----
-
-## 📂 Mapa del repositorio
+## Mapa del repositorio
 
 Ejemplo de estructura recomendada:
 
 ```
-├── dataset/
-│   ├── icbhi/
-│   │   ├── ICBHI_Final_Database/
+dataset/
+└── icbhi/
+│   ├── ICBHI_Final_Database/
 │   │   ├── notaciones/
 │   │   └── events/
 │   ├── audios_propios/ (descomprimir)
