@@ -6,17 +6,26 @@ import matplotlib.cm as cm
 from PIL import Image
 
 def __normalize_spec(spec):
+    '''
+    Normaliza un espectrograma a valores entre 0 y 255.
+    '''
     spec_min, spec_max = spec.min(), spec.max()
     spec = (spec - spec_min) / (spec_max - spec_min + 1e-6)
     spec = (spec * 255).astype(np.uint8)
     return spec
 
 def _spec_to_rgb(spec):
+    '''
+    Convierte un espectrograma normalizado a una imagen RGB usando el mapa de colores magma.
+    '''
     spec = __normalize_spec(spec)
     spec_color = cm.magma(spec / 255.0)[:, :, :3]
     return (spec_color * 255).astype(np.uint8)
 
 def save_mel_images(X, y, split_name, dataset):
+    '''
+    Guarda imágenes de espectrogramas Mel en un directorio específico y crea un archivo CSV con las etiquetas.
+    '''
     output_dir = f'./data_procesada/ciclos/{dataset}/{split_name}'
     os.makedirs(output_dir, exist_ok=True)
 
@@ -33,6 +42,9 @@ def save_mel_images(X, y, split_name, dataset):
 
 
 def load_image_dataset(img_dir, target_size=None):
+    '''
+    Carga un conjunto de datos de imágenes desde un directorio y sus etiquetas desde un archivo CSV.
+    '''
     df = pd.read_csv(os.path.join(img_dir, 'labels.csv'))
     X, y = [], []
     for _, row in df.iterrows():

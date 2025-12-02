@@ -7,6 +7,9 @@ import seaborn as sns
 from sklearn.metrics import confusion_matrix, precision_recall_curve
 
 def plot_mel_spectrogram(y, sr=SAMPLING_RATE, ax=None):
+    '''
+    Grafica el espectrograma Mel de una señal de audio.
+    '''
     if ax is None:
         fig, ax = plt.subplots(figsize=(6, 4))
     S = librosa.feature.melspectrogram(y=y, sr=sr, n_mels=N_MELS)
@@ -14,11 +17,17 @@ def plot_mel_spectrogram(y, sr=SAMPLING_RATE, ax=None):
     librosa.display.specshow(S_dB, sr=sr, x_axis='time', y_axis='mel', ax=ax);
 
 def plot_mel_spectrogram_from_dB(S_dB, ax=None):
+    '''
+    Grafica el espectrograma Mel a partir de una matriz en dB.
+    '''
     if ax is None:
         fig, ax = plt.subplots(figsize=(6, 4))
     librosa.display.specshow(S_dB, sr=SAMPLING_RATE, x_axis='time', y_axis='mel', ax=ax);
 
 def show_precision_recall_curve(y_true, y_proba, punto_corte=0.5, ax=None):
+    '''
+    Muestra la curva de precisión-recall con un punto de corte o umbral de decisión.
+    '''
     if ax is None:
         fig, ax = plt.subplots(figsize=(10, 4))
     prec, rec, thr = precision_recall_curve(y_true, y_proba)
@@ -35,6 +44,9 @@ def show_precision_recall_curve(y_true, y_proba, punto_corte=0.5, ax=None):
     return ax
 
 def show_confusion_matrix(y_true, y_pred, ax=None):
+    '''
+    Muestra la matriz de confusión.
+    '''
     cm = confusion_matrix(y_true, y_pred)
     if ax is None:
         fig, ax = plt.subplots(figsize=(10, 4))
@@ -44,7 +56,10 @@ def show_confusion_matrix(y_true, y_pred, ax=None):
     ax.set_title('Matriz de Confusión')
     return ax
 
-def show_importances_heatmap(importances, n_mels=N_MELS, ax=None):
+def show_importances_heatmap(importances, n_mels=N_MELS, ax=None, cmap='inferno'):
+    '''
+    Muestra un mapa de calor de las importancias de las features del modelo (sólo para espectrogramas Mel).
+    '''
     if ax is None:
         fig, ax = plt.subplots(figsize=(10, 6))
     n_frames = importances.shape[0] // n_mels
@@ -52,7 +67,7 @@ def show_importances_heatmap(importances, n_mels=N_MELS, ax=None):
     importance_img = importances.reshape((n_mels, n_frames))
     importance_img = np.flipud(importance_img)
 
-    sns.heatmap(importance_img, cmap='inferno', ax=ax, cbar=False)
+    sns.heatmap(importance_img, cmap=cmap, ax=ax, cbar=False)
     ax.set_xlabel('Tiempo (frames)')
     ax.set_ylabel('Bandas Mel')
     ax.set_title('Mapa de importancia de features del modelo')
