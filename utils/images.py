@@ -22,11 +22,11 @@ def _spec_to_rgb(spec):
     spec_color = cm.magma(spec / 255.0)[:, :, :3]
     return (spec_color * 255).astype(np.uint8)
 
-def save_mel_images(X, y, split_name, dataset):
+def save_mel_images(X, y, split_name, dataset, preproc='ciclos'):
     '''
     Guarda imágenes de espectrogramas Mel en un directorio específico y crea un archivo CSV con las etiquetas.
     '''
-    output_dir = f'./data_procesada/ciclos/{dataset}/{split_name}'
+    output_dir = f'./data_procesada/{preproc}/{dataset}/{split_name}'
     os.makedirs(output_dir, exist_ok=True)
 
     filenames = []
